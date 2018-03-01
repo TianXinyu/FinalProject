@@ -1,0 +1,78 @@
+# things I can do in my data
+
+```{r}
+# to see how many people are not in labor force (dichotomous variables)
+#table(PRData$LABFORCE)
+# to test if it's significant
+#distribution=table(PRData$LABFORCE)
+#chisq.test(distribution) # notice the the input is a table
+# to clean the NA, and only keep people from 25-65
+#symbolsForNA=c('†') # you can put here the symbols you want to convert to NA
+#schoolPub[-1]=lapply(schoolPub[-1],
+                 #function(x) 
+                   #replace(x,x%in%symbolsForNA, NA))
+#table(schoolPub$Title.1.School.Wide.)
+```
+
+```{r}
+# to see the age distribution (polytomous variables)
+# central value
+```
+
+# To see the relationship between 2 variables: use bivariate case
+## here i want to see the relationship between age and labforce, 
+## which is categorical-numerical
+
+# I want to see which variable affects the laborforce most, so I can use clustering/PCA tech.
+# I can set levles on age (25-35,35-45,45-55,55-65)
+# If i want to make a map, i need to merge extra data
+
+
+```{r}
+# get the data from github
+dataURL <- "https://raw.githubusercontent.com/TianXinyu/FinalProject/master/usa_00001.csv"
+data <- read.csv(dataURL)
+class(data)
+```
+
+```{r}
+names(data)
+# I dont need detailed race
+data$RACED <- NULL
+head(data)
+```
+
+```{r}
+# delete the NAs, inthe data file, NA in labforce is coded as "0"
+data$LABFORCE[data$LABFORCE==0] <- NA
+table(data$LABFORCE)
+str(data)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
