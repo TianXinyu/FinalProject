@@ -1,6 +1,5 @@
 # things I can do in my data
 
-```{r}
 # to see how many people are not in labor force (dichotomous variables)
 #table(PRData$LABFORCE)
 # to test if it's significant
@@ -12,12 +11,11 @@
                  #function(x) 
                    #replace(x,x%in%symbolsForNA, NA))
 #table(schoolPub$Title.1.School.Wide.)
-```
 
-```{r}
+
+
 # to see the age distribution (polytomous variables)
 # central value
-```
 
 # To see the relationship between 2 variables: use bivariate case
 ## here i want to see the relationship between age and labforce, 
@@ -31,32 +29,96 @@
 ```{r}
 # get the data from github
 dataURL <- "https://raw.githubusercontent.com/TianXinyu/FinalProject/master/usa_00001.csv"
+
+# https://github.com/TianXinyu/FinalProject/raw/master/usa_00001.csv
+
+# https://github.com/TianXinyu/FinalProject/blob/master/usa_00001.csv?raw=true
+
+
 data <- read.csv(dataURL)
 class(data)
 ```
 
 ```{r}
 names(data)
-# I dont need detailed race
-data$RACED <- NULL
-head(data)
-```
-
-```{r}
-# delete the NAs, inthe data file, NA in labforce is coded as "0"
-data$LABFORCE[data$LABFORCE==0] <- NA
-table(data$LABFORCE)
 str(data)
 ```
 
+```{r}
+# I dont need detailed race and classofwork
+
+datanew=data[,c("AGE","LABFORCE","DIFFPHYS" ,"DIFFMOB" , "DIFFCARE" ,"DIFFSENS", "DIFFEYE" , "DIFFHEAR")]
+head(datanew)
+```
+
+make age a numerical variables
+```{r}
+datanew$AGE=as.numeric(datanew$AGE)
+str(datanew$AGE)
+```
 
 
+```{r}
+# keep people from 25-65
+datanew=datanew[datanew$AGE>=25 & datanew$AGE<=65, ]
+str(datanew)
+```
 
 
+```{r}
+# 0 is not in lbfc, 1 is in lbfc
+datanew$LABFORCE=as.numeric(datanew$LABFORCE)
+datanew$lbfc[datanew$LABFORCE==1] <- 0
+datanew$lbfc[datanew$LABFORCE==2] <- 1
+str(datanew)
+```
+
+```{r}
+# find rows with Labforce==NA
+datanew$Disease[datanew$DIFFPHYS==1|datanew$DIFFCARE==1 | datanew$DIFFMOB==1 |  datanew$DIFFCARE==1 |  datanew$DIFFSENS==1 |  datanew$DIFFEYE==1 |  datanew$DIFFHEAR==1] <-0
+datanew$Disease[datanew$DIFFPHYS==2 | datanew$DIFFCARE==2 | datanew$DIFFMOB==2 |  datanew$DIFFCARE==2 |  datanew$DIFFSENS==2 |  datanew$DIFFEYE==2 |  datanew$DIFFHEAR==2] <-1
+str(datanew)
+```
+
+```{r}
+datafinal=datanew[,c("AGE","lbfc","Disease")]
+str(datafinal)
+```
+
+```{r}
+# explore the variables
+## age
+summary(datafinal$AGE)
+```
+
+```{r}
+hist(datafinal$AGE,nclass = 10,xlab = 'xxx')
+```
+```{r}
+datafinal
+
+```
+
+```{r}
+prop.table(table(datafinal$lbfc,datafinal$Disease))
+```
 
 
+```{r}
+boxplot(datafinal$AGE~datafinal$lbfc)
+```
+```{r}
+boxplot(datafinal$AGE~datafinal$Disease)
+```
 
+```{r}
+datafinal$Disease=as.factor(datafinal$Disease)
+mod=glm(lbfc~.,data=datafinal,family = 'binomial')
+```
 
+```{r}
+summary(mod)
+```
 
 
 
