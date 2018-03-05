@@ -65,12 +65,12 @@ prop.table(table(usdata$lbfc))
 ```
 
 # explore the relationship between lbfc and age.
-## use boxplot to show the average age of both lbfc statues in PR
+## 1. use boxplot to show the average age of both lbfc statues in PR
 ```{r}
 boxplot(prdata$AGE~prdata$lbfc)
 ```
 
-## I sepret age into Y (young25-45) and O(old,45-65)
+## 2. Sepret age into Y (young25-45) and O(old,45-65)
 ```{r}
 prY <- prdata[prdata$AGE<=45,]
 prO <- prdata[prdata$AGE>45,]
@@ -78,30 +78,31 @@ usY <- usdata[usdata$AGE<=45,]
 usO <- usdata[usdata$AGE>45,]
 ```
 
-## compare the difference between young people
+## 3. Compare the difference between young people
 ```{r}
 prop.table(table(prY$lbfc))
 prop.table(table(usY$lbfc))
 ```
 
-## compare the difference between old people
+## 4. Compare the difference between old people
 ```{r}
 prop.table(table(prO$lbfc))
 prop.table(table(usO$lbfc))
 ```
 
-# use probiblity table to see the disability rate in PR and US
+# Explore the relationship between lbfc and disability
+## 1. Use probiblity table to see the disability rate in PR and US
 ```{r}
 prop.table(table(prdata$Disable))
 prop.table(table(usdata$Disable))
 ```
 
-## use boxplot to show the average age of both health statues in PR
+## 2. Use boxplot to show the average age of both health statues in PR
 ```{r}
 boxplot(prdata$AGE~prdata$Disable)
 ```
 
-## For people who are disabled, how many of them are in labor force
+## 3. For people who are disabled, how many of them are in labor force
 ```{r}
 prdis <- prdata[prdata$Disable==1,]
 usdis <- usdata[usdata$Disable==1,]
@@ -110,14 +111,14 @@ prop.table(table(usdis$lbfc))
 ```
 
 # Use regression analysis to confirm the relationship between age and disability.
-## PR
+## 1. PR
 ```{r}
 prdata$Disable=as.factor(prdata$Disable)
 mod=glm(lbfc~.,data=prdata,family = 'binomial')
 summary(mod)
 ```
 
-## US
+## 2. US
 ```{r}
 usdata$Disable=as.factor(usdata$Disable)
 mod1=glm(lbfc~.,data=usdata,family = 'binomial')
