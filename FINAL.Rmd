@@ -1,0 +1,125 @@
+
+# Get the data from Github
+```{r}
+data0URL <- "https://raw.githubusercontent.com/TianXinyu/FinalProject/master/usa_00003.csv"
+data0 <- read.csv(data0URL)
+```
+
+# See the structure of the data
+```{r}
+class(data0)
+names(data0)
+str(data0)
+```
+
+# Clean the dataset
+## 1. make age a numerical variable
+```{r}
+data0$AGE=as.numeric(data0$AGE)
+data0$DATANUM=as.numeric(data0$DATANUM)
+str(data0$AGE)
+str(data0$DATANUM)
+```
+
+## 2. keep people from 25-65
+```{r}
+data0=data0[data0$AGE>=25 & data0$AGE<=65, ]
+str(data0)
+```
+
+## 3. Clean all the missing datas in labor force, 0 is not in lbfc, 1 is in lbfc
+```{r}
+data0$LABFORCE=as.numeric(data0$LABFORCE)
+data0$lbfc[data0$LABFORCE==1] <- 0
+data0$lbfc[data0$LABFORCE==2] <- 1
+str(data0)
+```
+
+## 4. Combine the diseases column together, get a new veriable(column), o is healthy, 1 is disabled
+```{r}
+Disable <- rep_len(0, length.out=nrow(data0))
+data0 <- cbind(data0, Disable)
+data0$Disable <- data0$Disable[data0$DIFFPHYS==1 & data0$DIFFCARE==1 & data0$DIFFMOB==1 & data0$DIFFSENS==1 & data0$DIFFEYE==1 & data0$DIFFHEAR==1] <-0
+data0$Disable[data0$DIFFPHYS==2 | data0$DIFFCARE==2 | data0$DIFFMOB==2 |  data0$DIFFSENS==2 | data0$DIFFEYE==2 |  data0$DIFFHEAR==2] <-1
+str(data0)
+```
+
+# Get a new dataframe after cleaning
+```{r}
+data1 <- data0[,c('DATANUM','AGE','lbfc','Disable')]
+str(data1)
+```
+
+# Seperate the data into US data and PR data
+```{r}
+prdata <- data1[data1$DATANUM==2,]
+str(prdata)
+usdata <- data1[data1$DATANUM==1,]
+str(usdata)
+```
+
+# use probiblity table to see the labor force participation rate in PR and US
+```{r}
+prop.table(table(prdata$lbfc))
+prop.table(table(usdata$lbfc))
+```
+
+# explore the relationship between lbfc and age.
+## use boxplot to show the average age of both lbfc statues in PR
+```{r}
+boxplot(prdata$AGE~prdata$lbfc)
+```
+
+## I sepret age into Y (young25-45) and O(old,45-65)
+```{r}
+prY <- prdata[prdata$AGE<=45,]
+prO <- prdata[prdata$AGE>45,]
+usY <- usdata[usdata$AGE<=45,]
+usO <- usdata[usdata$AGE>45,]
+```
+
+## compare the difference between young people
+```{r}
+prop.table(table(prY$lbfc))
+prop.table(table(usY$lbfc))
+```
+
+## compare the difference between old people
+```{r}
+prop.table(table(prO$lbfc))
+prop.table(table(usO$lbfc))
+```
+
+# use probiblity table to see the disability rate in PR and US
+```{r}
+prop.table(table(prdata$Disable))
+prop.table(table(usdata$Disable))
+```
+
+## use boxplot to show the average age of both health statues in PR
+```{r}
+boxplot(prdata$AGE~prdata$Disable)
+```
+
+## For people who are disabled, how many of them are in labor force
+```{r}
+prdis <- prdata[prdata$Disable==1,]
+usdis <- usdata[usdata$Disable==1,]
+prop.table(table(prdis$lbfc))
+prop.table(table(usdis$lbfc))
+```
+
+# Use regression analysis to confirm the relationship between age and disability.
+## PR
+```{r}
+prdata$Disable=as.factor(prdata$Disable)
+mod=glm(lbfc~.,data=prdata,family = 'binomial')
+summary(mod)
+```
+
+## US
+```{r}
+usdata$Disable=as.factor(usdata$Disable)
+mod1=glm(lbfc~.,data=usdata,family = 'binomial')
+summary(mod1)
+```
