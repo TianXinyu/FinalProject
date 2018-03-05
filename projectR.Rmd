@@ -33,8 +33,6 @@ dataURL <- "https://raw.githubusercontent.com/TianXinyu/FinalProject/master/usa_
 # https://github.com/TianXinyu/FinalProject/raw/master/usa_00001.csv
 
 # https://github.com/TianXinyu/FinalProject/blob/master/usa_00001.csv?raw=true
-
-
 data <- read.csv(dataURL)
 class(data)
 ```
@@ -47,11 +45,11 @@ str(data)
 ```{r}
 # I dont need detailed race and classofwork
 
-datanew=data[,c("AGE","LABFORCE","DIFFPHYS" ,"DIFFMOB" , "DIFFCARE" ,"DIFFSENS", "DIFFEYE" , "DIFFHEAR")]
+datanew=data[,c("AGE","LABFORCE","DIFFPHYS" ,"DIFFMOB" , "DIFFCARE" ,"DIFFSENS", "DIFFEYE" , "DIFFHEAR","RACE")]
 head(datanew)
 ```
 
-make age a numerical variables
+make age a numerical variable
 ```{r}
 datanew$AGE=as.numeric(datanew$AGE)
 str(datanew$AGE)
@@ -74,51 +72,51 @@ str(datanew)
 ```
 
 ```{r}
-# find rows with Labforce==NA
-datanew$Disease[datanew$DIFFPHYS==1|datanew$DIFFCARE==1 | datanew$DIFFMOB==1 |  datanew$DIFFCARE==1 |  datanew$DIFFSENS==1 |  datanew$DIFFEYE==1 |  datanew$DIFFHEAR==1] <-0
-datanew$Disease[datanew$DIFFPHYS==2 | datanew$DIFFCARE==2 | datanew$DIFFMOB==2 |  datanew$DIFFCARE==2 |  datanew$DIFFSENS==2 |  datanew$DIFFEYE==2 |  datanew$DIFFHEAR==2] <-1
+# combine the diseases column together
+Disease <- rep_len(0, length.out=nrow(datanew))
+datanew <- cbind(datanew, Disease)
+datanew$Disease <- datanew$Disease[datanew$DIFFPHYS==1 & datanew$DIFFCARE==1 & datanew$DIFFMOB==1 & datanew$DIFFSENS==1 & datanew$DIFFEYE==1 & datanew$DIFFHEAR==1] <-0
+datanew$Disease[datanew$DIFFPHYS==2 | datanew$DIFFCARE==2 | datanew$DIFFMOB==2 |  datanew$DIFFSENS==2 | datanew$DIFFEYE==2 |  datanew$DIFFHEAR==2] <-1
 str(datanew)
 ```
 
 ```{r}
-datafinal=datanew[,c("AGE","lbfc","Disease")]
+# Get the final dataset
+datafinal=datanew[,c("AGE","lbfc","Disease","RACE")]
 str(datafinal)
 ```
 
 ```{r}
-# explore the variables
-## age
-summary(datafinal$AGE)
-```
-
-```{r}
-hist(datafinal$AGE,nclass = 10,xlab = 'xxx')
-```
-```{r}
-datafinal
-
+# see the age structure
+hist(datafinal$AGE,nclass = 10,xlab = 'age')
 ```
 
 ```{r}
 prop.table(table(datafinal$lbfc,datafinal$Disease))
+# this table shows that, 28% people are healthy but not in lbfc, 52% of people are healthy and in lbfc; 13% of people are unhealthy and not in lbfc, 4% are unhealthy but still in lbfc.
+## so that we can tell, for people who are sick, it is more likely that they are not in lbfc.
 ```
 
 
 ```{r}
 boxplot(datafinal$AGE~datafinal$lbfc)
+# this graph shows that the average age of not in lbfc is higher than the average age of people in lbfc.
+## it means older people are more likely to be not in lbfc.
 ```
+
 ```{r}
 boxplot(datafinal$AGE~datafinal$Disease)
+# it means older people are more likely to have health issue.
 ```
 
 ```{r}
+# regression analysis
 datafinal$Disease=as.factor(datafinal$Disease)
 mod=glm(lbfc~.,data=datafinal,family = 'binomial')
+summary(mod)
+# this means disease and age are infecting people's lbfc statue.
 ```
 
-```{r}
-summary(mod)
-```
 
 
 
