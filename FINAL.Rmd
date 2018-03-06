@@ -1,4 +1,8 @@
-First of all, I want to say "thank you" to professor Magallanes and Isabella, I would't be able to finish this simple project without your generous help.
+# Labor force market in Puerto Rico and U.S. mainland
+##### The data I am using in this research is ACS (American Community Surveys) 2016 data, From the data, I found that the labor force participation rate in Puerto Rico(0.58) is far lower than it in the U.S. mainland(0.75).
+##### To find out the reason that caused such a huge difference, I took age and disability as two main variables and tried to explore the relationship between these variables and the labor force statue.
+
+##### First of all, I want to say "thank you" to professor Magallanes and Isabella, I would't be able to finish this simple project without your generous help.
 
 # Get the data from Github
 ```{r}
