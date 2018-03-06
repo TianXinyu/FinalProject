@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+
+\usepackage{apacite}
+
+\title{Final Report Summary}
+\author{
+        Xinyu Tian\\
+        \texttt{tian9@uw.edu}
+}
+\date{\today}
+
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+
+\section{Introduction}\label{intro}
+In this report, I focused my research on the labor force market in Puerto Rico and the U.S. mainland. From the data, I found that the labor force participation rate in Puerto Rico(0.58) is far lower than it in the U.S. mainland(0.75).
+
+To find out the reason that caused such a huge difference, I took age and disability as two main variables and tried to explore the relationship between these variables and the labor force statue.
+
+The data I am using in this research is ACS\footnote{American Community Surveys, from IPUMS USA(https://usa.ipums.org/usa/index.shtml).} 2016 1-year data. 
+
+
+\section{Exploration}\label{eda}
+
+First of all, I computed the labor force participation rate in Puerto Rico and the U.S. mainland (See Table 1) 
+
+<<verifying, echo=FALSE,eval=TRUE>>=
+str(states, width = 60, strict.width = "cut")
+@
+
+As we can see from it, there are 42 percent of people in Puerto Rico not in labor force, compared to the propotion in U.S. mainland (25 percent),  
+
+A next step demands:
+\begin{itemize}
+  \item Knowing the \emph{central} and \emph{dispersion} values.
+  \item Visualizing the variables of interest.
+\end{itemize}
+
+Except for the column \emph{state}, we can compute the centrality and spread measures for the other variables in the data. I will do that in Table \ref{measures} in the next page.
+
+<<meanspread,echo=FALSE,results=tex,eval=TRUE>>=
+# notice "results=tex"
+#install.packages("stargazer")
+library(stargazer)
+stargazer(states[,-c(1,8)],title = "Mean and Spread values", label = "measures")
+@
+
+As you saw, my Table \ref{measures} is nice. As you, saw the mean of the variable \emph{satMean} is \Sexpr{mean(states$satMean, na.rm = T)}. Now let's use a boxplot to explore location:
+
+%%%%%%%
+% figure 
+
+\begin{figure}[h]
+\centering
+<<location,echo=FALSE, fig=TRUE,eval=TRUE,height=4.6>>=
+# notice "fig=TRUE"
+par(mfrow=c(1,3))
+boxplot(states$satMean)
+boxplot(states$satDemand)
+boxplot(states$k12ExpenditurePupil)
+@
+\caption{Location of values}
+\label{plot_boxplots}
+\end{figure}
+
+
+As we have a categorical variable, we could create a frequency table:
+
+<<tableCat2,echo=FALSE, results=tex,eval=TRUE>>=
+tableF=data.frame(table(states$region),row.names = NULL)
+names(tableF)=c("Region", 'Frequency')
+stargazer(tableF,title = "Distribution of Region",  
+          label = "table_region",rownames=FALSE,summary = FALSE)
+@
+
+
+
+\subsection{Modeling}\label{model}
+
+Here, I propose that the amount of money spent for child per state in the US has an effect on the mean average pupils in a state get in SAT:
+<<reg1,echo=TRUE,eval=TRUE>>=
+reg1=lm(satMean~k12ExpenditurePupil, data = states)
+@
+
+Here, I modify the previous model; while I insist that the amount of money spent for child per state in the US has an effect on the mean average pupils in a state get in SAT; I will control the effect the demand per state (as demand were equal accross states). Then,
+
+Model 2: 
+<<reg2,echo=TRUE,eval=TRUE>>=
+reg2=lm(satMean~k12ExpenditurePupil+satDemand, data = states)
+@
+
+I have the results, but have not display them, let's do it in the coming subsection
+%%%%%%%
+%% better way coming here!!!!!
+
+\subsection{Modeling nicely}\label{modelnice}
+
+What about this:
+
+<<models2,results=tex, echo=false,eval=TRUE>>=
+stargazer(reg1,reg2,covariate.labels=c("Dollars per Student", "Share taking SAT"),title = "Regression Models", label = "regmods")
+@
+
+\clearpage
+
+\section{Explaining Citations}\label{citation}
+
+
+Citing requires a \emph{bib} file with all the books. You can create it from Zotero, and then add it here with the command \cite{magallanes_reyes_introducing_2017}. For example, open the file named `GovernanceAnalytics' and write the name of the author here \cite{raschka_python_2017}.
+
+
+\bibliographystyle{apacite} 
+\bibliography{mybibgov} %you can change this 'bibfile' name.
+
+\end{document}
