@@ -13,7 +13,7 @@ str(data0)
 ```
 
 # Clean the dataset
-## 1. make age a numerical variable
+## 1. Make age a numerical variable
 ```{r}
 data0$AGE=as.numeric(data0$AGE)
 data0$DATANUM=as.numeric(data0$DATANUM)
@@ -21,7 +21,7 @@ str(data0$AGE)
 str(data0$DATANUM)
 ```
 
-## 2. keep people from 25-65
+## 2. Keep people from 25-65
 ```{r}
 data0=data0[data0$AGE>=25 & data0$AGE<=65, ]
 str(data0)
@@ -58,14 +58,14 @@ usdata <- data1[data1$DATANUM==1,]
 str(usdata)
 ```
 
-# use probiblity table to see the labor force participation rate in PR and US
+# Use probiblity table to see the labor force participation rate in PR and US
 ```{r}
 prop.table(table(prdata$lbfc))
 prop.table(table(usdata$lbfc))
 ```
 
-# explore the relationship between lbfc and age.
-## 1. use boxplot to show the average age of both lbfc statues in PR
+# Explore the relationship between lbfc and age.
+## 1. Use boxplot to show the average age of both lbfc statues in PR
 ```{r}
 boxplot(prdata$AGE~prdata$lbfc)
 ```
