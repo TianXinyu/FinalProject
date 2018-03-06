@@ -1,3 +1,4 @@
+First of all, I want to say "thank you" to professor Magallanes and Isabella, I would't be able to finish this simple project without your generous help.
 
 # Get the data from Github
 ```{r}
