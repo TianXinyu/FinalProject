@@ -129,9 +129,6 @@ $(document).ready(function () {
 <div id="to-find-out-the-reason-that-caused-such-a-huge-difference-i-took-age-and-disability-as-two-main-variables-and-tried-to-explore-the-relationship-between-these-variables-and-the-labor-force-statue." class="section level5">
 <h5>To find out the reason that caused such a huge difference, I took age and disability as two main variables and tried to explore the relationship between these variables and the labor force statue.</h5>
 </div>
-<div id="first-of-all-i-want-to-say-thank-you-to-professor-magallanes-and-isabella-i-wouldt-be-able-to-finish-this-simple-project-without-your-generous-help." class="section level5">
-<h5>First of all, I want to say “thank you” to professor Magallanes and Isabella, I would’t be able to finish this simple project without your generous help.</h5>
-</div>
 </div>
 <div id="get-the-data-from-github" class="section level1">
 <h1>Get the data from Github</h1>
@@ -158,8 +155,8 @@ data0 &lt;- read.csv(data0URL)</code></pre>
 ##  $ DIFFEYE : int  1 1 1 1 1 1 1 1 1 1 ...
 ##  $ DIFFHEAR: int  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
 </div>
-<div id="clean-the-dataset" class="section level1">
-<h1>Clean the dataset</h1>
+<div id="clean-the-dataset-delete-all-the-missing-values-and-only-keep-the-variables-you-need." class="section level1">
+<h1>Clean the dataset, delete all the missing values and only keep the variables you need.</h1>
 <div id="make-age-a-numerical-variable" class="section level2">
 <h2>1. Make age a numerical variable</h2>
 <pre class="r"><code>data0$AGE=as.numeric(data0$AGE)
@@ -394,6 +391,9 @@ summary(mod1)</code></pre>
 ## AIC: 1696936
 ## 
 ## Number of Fisher Scoring iterations: 4</code></pre>
+<div id="at-last-i-want-to-say-thank-you-to-professor-magallanes-steven-and-isabella-i-wouldt-be-able-to-finish-this-simple-project-without-your-generous-help." class="section level5">
+<h5>At last, I want to say “thank you” to professor Magallanes, Steven and Isabella, I would’t be able to finish this simple project without your generous help.</h5>
+</div>
 </div>
 </div>
 
